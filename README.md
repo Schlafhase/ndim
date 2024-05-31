@@ -1,2 +1,2 @@
 # ndim
-Esoteric programming language
+Read more about ndim [here](https://esolangs.org/wiki/Ndim)
