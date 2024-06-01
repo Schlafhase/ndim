@@ -1,0 +1,80 @@
+3dim;
+input <0, 0, 0>; //ask for input
+duplicate <5, 0, 0>;
+assign <10, 0, 0>; //store input at <10, 1, 0>
+#2 <15, 0, 0>;
+< <20, 0, 0>;
+if 0 <25, 0, 0>;
+//if input was not smaller than 2
+//{
+    -1 <25, 5, 0>;
+    #1 <24, 5, 0>; //push 1 as starting value
+    2 <23, 5, 0>;
+
+    //get previous value
+    -1 <23, 6, 0>;
+    jump <8, 6, 0>;
+    -2 <6, 6, 0>;
+    1 <6, 4, 0>;
+    2 <22, 4, 0>;
+    -1 <22, 5, 0>;
+    //add one to previous value
+    #1 <20, 5, 0>;
+    + <15, 5, 0>;
+    duplicate <14, 5, 0>;
+    //store new previous value
+    assign <13, 5, 0>; //<13, 6, 0>
+    //get original input
+    -2 <12, 5, 0>;
+    -1 <12, 1, 0>;
+    2 <9, 1, 0>;
+    -1 <9, 5, 0>;
+    2 <8, 5, 0>;
+    > <8, 10, 0>;
+    if 1 <8, 15, 0>;
+    //if the current value is greater than the original input
+//  {
+        //get previous multiplied result and print it
+        -2 <8, 15, 4>;
+        -1 <8, 6, 4>;
+        -3 <-4, 6, 4>;
+        -1 <-4, 6, 0>;
+        print <-6, 6, 0>;
+        end <-7, 6, 0>;
+//  }
+//  else 
+//  {
+        //get previous value then go to line <7, 7, 0>
+        -2 <8, 15, -1>;
+        1 <8, 6, -1>;
+        3 <13, 6, -1>;
+        -1 <13, 6, 3>;
+        2 <7, 6, 3>;
+        -3 <7, 7, 3>;
+        //get previous multiplied value
+        -2 <7, 7, 0>;
+        3 <7, 6, 0>;
+        -1 <7, 6, 1>;
+        -3 <-5, 6, 1>;
+        -1 <-5, 6, -1>;
+        2 <-6, 6, -1>;
+        1 <-6, 7, -1>;
+        -2 <1, 7,-1>;
+        3 <1, 5, -1>;
+        -1 <1, 5, 0>;
+        //mulitply both then store the new value
+        * <0, 5, 0>;
+        assign <-5, 5, 0>; //<-5, 6, 0>
+        #1 <-5, 6, 0>;
+        2 <-13, 5, 0>;
+        1 <-13, 13, 0>;
+        //go to line 15
+        -2 <23, 13, 0>;
+//  }
+//}
+//else
+//{
+    #1 <25, -5, 0>;
+    print <25, -10, 0>;
+    end <25, -15, 0>;
+//}
