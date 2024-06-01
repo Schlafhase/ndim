@@ -1,6 +1,15 @@
 {
     "highlight.regexes": {
-        "^(//.*)": {
+        "^(\\s*//.*)": {
+            "filterFileRegex": ".*(.ndim)$",
+            "decorations": [
+                {
+                    "overviewRulerColor": "#747474",
+                    "color": "#747474"
+                }
+            ]
+        },
+        ";(.*)": {
             "filterFileRegex": ".*(.ndim)$",
             "decorations": [
                 {
@@ -19,7 +28,7 @@
                 }
             ]
         },
-        "^(\\s*(-?\\d\\s+|\\?|jump))": {
+        "^(\\s*(-?\\d\\s*|\\?|jump))": {
             "filterFileRegex": ".*(.ndim)$",
             "decorations": [
                 {
