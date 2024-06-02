@@ -36,5 +36,10 @@ namespace ndimInterpreter
 			}
 			return hashCode.ToHashCode();
 		}
+
+		public override string ToString()
+		{
+			return string.Join(", ", vector);
+		}
 	}
 }

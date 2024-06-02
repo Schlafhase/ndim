@@ -51,12 +51,12 @@ namespace ndimInterpreter
 
 		public void TurnLeft()
 		{
-			Direction = -((Math.Abs(Direction) + 1) % (dimensions + 1));
+			Direction = -((Math.Abs(Direction) % dimensions) + 1);
 		}
 
 		public void TurnRight()
 		{
-			Direction = (Math.Abs(Direction) + 1) % (dimensions + 1);
+			Direction = (Math.Abs(Direction) % (dimensions)) + 1;
 		}
 	}
 }

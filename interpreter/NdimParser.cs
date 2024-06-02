@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -21,6 +23,7 @@ namespace ndimInterpreter
 		Regex noParamInstructionRegex;
 		Regex ifCommandRegex;
 		Regex commentRegex;
+		HashSet<Coordinate> breakpoints = new HashSet<Coordinate>();
 		public bool Running;
 		public bool EatMode = false;
 		public int Jump = -1;
@@ -28,9 +31,9 @@ namespace ndimInterpreter
 		public NdimParser()
 		{
 			validateNdimCodeRegex = new(@"^\s*((-?\d+|\?|jump)|(#\d|pop|swap|duplicate|\+|-|\*|/|\^|&|\||!|<|>)|if\s+\d+|(assignHere|assign|toggleEat|input|printChar|print)|end) *(<)([\d, -]+)(>);");
-			commentRegex = new(@"^//.*");
+			commentRegex = new(@"^\s*(//.*)?$");
 			changePointerDirectionCommandRegex = new(@"^\s*((-?\d+)|\?)");
-			noParamInstructionRegex = new(@"^\s*(duplicate|jump|pop|swap|\+|-|\*|\/|\^|\<\>|&|\||!|input|assign|assignHere|toggleEat|printChar|print|end)");
+			noParamInstructionRegex = new(@"^\s*(duplicate|jump|pop|swap|\+|-|\*|\/|\^|<|>|&|\||!|input|assign|assignHere|toggleEat|printChar|print|end)");
 			pushCommandRegex = new(@"^\s*(#)(\d)");
 			ifCommandRegex = new(@"^\s*if\s+(\d+)");
 			whiteSpaceRegex = new(@"\s+");
@@ -74,10 +77,16 @@ namespace ndimInterpreter
 			{
 				throw;
 			}
+			Console.WriteLine("Ndim program started!");
 			Running = true;
+			//breakpoints.Add(new Coordinate([8, 10, 0]));
 			while (Running)
 			{
-				CoordinateSystem.StepNext();
+				if (breakpoints.Contains(CoordinateSystem.Pointer.Position))
+				{
+					Debugger.Break();
+				}
+				CoordinateSystem.StepNext(Jump >= 0);
 				Jump -= 1;
 			}
 		}
@@ -92,13 +101,18 @@ namespace ndimInterpreter
 			Match commandMatch = validateNdimCodeRegex.Match(command);
 			if (!commandMatch.Success)
 			{
-				throw new SyntaxErrorException("Invalid Syntax or unknown Command");
+				throw new SyntaxErrorException($"Invalid Syntax or unknown Command: {command}");
 			}
 			string instruction = commandMatch.Groups[1].Value;
 			List<int> coord = whiteSpaceRegex.Replace(commandMatch.Groups[6].Value, "").Split(",").Select(x => int.Parse(x)).ToList();
 			if (coord.Count != Dimensions)
 			{
 				throw new SyntaxErrorException($"Vector was not {Dimensions} dimensional");
+			}
+
+			if (breakpoints.Contains(new(coord)))
+			{
+				Debugger.Break();
 			}
 
 			ICommand cmd;
@@ -218,12 +232,12 @@ namespace ndimInterpreter
 				}
 				else
 				{
-					throw new SyntaxErrorException("Unrecognized parameterless command");
+					throw new SyntaxErrorException($"Unrecognized parameterless command: {command}");
 				}
 			}
 			else
 			{
-				throw new SyntaxErrorException("Invalid command");
+				throw new SyntaxErrorException($"Invalid command: {command}");
 			}
 			CoordinateSystem.RegisterCommandOrValue(new Coordinate(coord), cmd);
 		}

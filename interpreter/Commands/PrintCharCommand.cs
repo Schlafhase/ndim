@@ -10,15 +10,15 @@ namespace ndimInterpreter.Commands
 	{
 		NdimParser ndim;
 
-        public PrintCharCommand(NdimParser ndim)
-        {
+		public PrintCharCommand(NdimParser ndim)
+		{
 			this.ndim = ndim;
-        }
+		}
 
-        public void Execute()
+		public void Execute()
 		{
 			int value = ndim.Stack.Pop();
-			Console.Write((char)value);
+			Console.Write(char.ConvertFromUtf32(value));
 		}
 	}
 }

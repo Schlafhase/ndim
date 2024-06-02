@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ndimInterpreter.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,10 @@ namespace ndimInterpreter
 
 		public void RegisterCommandOrValue(Coordinate coord, ICommand command)
 		{
+			if (commands.ContainsKey(coord) && command is not Value)
+			{
+				throw new ArgumentException($"There can only be one command at each coordinate. Coordinate <{coord}> was already occupied.");
+			}
 			commands[coord] = command;
 		}
 
@@ -29,13 +34,16 @@ namespace ndimInterpreter
 			commands.Remove(coord);
 		}
 
-		public void StepNext()
+		public void StepNext(bool jump)
 		{
 			ICommand command;
 			try
 			{
-				command = commands[Pointer.Position];
-				command.Execute();
+				if (!jump)
+				{
+					command = commands[Pointer.Position];
+					command.Execute();
+				}
 			}
 			catch (KeyNotFoundException) {}
 			finally

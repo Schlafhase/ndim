@@ -30,10 +30,6 @@ namespace ndimInterpreter.Commands
 
         public void Execute()
         {
-            if (ndim.Jump >= 0)
-            {
-                return;
-            }
             switch (type)
             {
                 case "set":
